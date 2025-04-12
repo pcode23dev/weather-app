@@ -19,7 +19,6 @@
     --text-body-blur:#9d9d9db8;  
     --input-bg: #f4f4f4;
     --shape: #00000092;
-
 }
 
 .modo-escuro{
@@ -31,11 +30,13 @@
     --text-body-blur:#484856;
     --input-bg: #1E1E29;
     --shape: #ffffff;
-
 }
 
 .bg-blue-baby{
     background-color: var(--blue-baby);
+}
+.text-blue-baby{
+    color: var(--blue-baby);
 }
 .bg-dark-ligth {
     background: var(--bg-dark-ligth);
@@ -92,7 +93,6 @@ body{
     background: var(--background);
     -webkit-font-smoothing: antialiased;
     position: relative;
-    transition: background-color 0.3s, color 0.3s;
 }
 
 button, i{
@@ -139,6 +139,7 @@ button, i{
     padding: 10rem 0 2rem 0;
 
     h1{
+        font-size: 2rem;
         color: var(--shape);
         span {
             @media (max-width: 575.98px) {
@@ -157,7 +158,7 @@ button, i{
     }
 
     h4{
-        font-size: 1.5rem;
+        font-size: 1.4rem;
         color: var(--text-title);
         margin: 1rem; 
         font-weight: normal;
@@ -177,7 +178,7 @@ button, i{
     input {
 
         background: var(--input-bg);
-        font-size: 1.2rem;
+        font-size: 1.1rem;
         padding: 1rem;
         color: var(--text-body);
         border: none;
@@ -190,22 +191,22 @@ button, i{
           outline: none;
 
         }
-    
+
         &::placeholder {
           color: var(--text-body-blur);
         }
     
         @media (max-width: 767.98px) {
-          font-size: 1.1rem;
+          font-size: 1rem;
           padding: 1rem;
         }
     
         @media (max-width: 575.98px) {
           font-size: 1rem;
-          padding: 1remW;
+          padding: 1rem;
         }
       }
-    
+
       button {
         padding: 1.5rem 0 1rem 0;
         margin-left: -50px;
@@ -236,12 +237,6 @@ button, i{
   
     @media (max-width: 575.98px) {
         height: 20vh;
-    }
-}
-
-#detalhesTempo {
-    div{
-        padding: .3rem 0;
     }
 }
 

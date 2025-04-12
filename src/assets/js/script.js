@@ -3,8 +3,6 @@
 const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]')
 const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl))
 
-
-
 /* iniciar o mapa */
 function initMap(latitude, longitude) {
     // Inicializa o mapa
@@ -19,8 +17,8 @@ function initMap(latitude, longitude) {
     L.marker([latitude, longitude]).addTo(map)
         .bindPopup('Localização atual')
         .openPopup();
-}
 
+}
 
 /* scripts da dashboard */
 function carregarDashboard(cityUrl) {
@@ -38,6 +36,11 @@ async function getWeatherData(city) {
     try {
         const response = await fetch(url);
         const data = await response.json();
+        console.log("Tempo actual: ", data);
+
+        if (data.cod !== 200) {
+            throw new Error("Cidade inválida ou não encontrada");
+        }
 
         lon = data.coord.lon;
         lat = data.coord.lat;
@@ -53,6 +56,7 @@ async function getWeatherData(city) {
         document.getElementById("actualTemIntervaloCidade").innerHTML = `${data.main.temp_max}°C / ${data.main.temp_min}°C`
         document.getElementById("actualDescricaoCidade").innerHTML = `${data.weather[0].description}`;
         const weatherIcon = data.weather[0].icon;
+
         document.getElementById("bgClima").style.backgroundImage = `url(src/assets/icon/imagens/${weatherIcon}.png)`;
         document.getElementById("actualIconCidade").src = `src/assets/icon/iconsClima/${weatherIcon}.svg`;
 
@@ -62,17 +66,18 @@ async function getWeatherData(city) {
         document.getElementById("detalHumidade").textContent = `${data.main.humidity}%`;
         document.getElementById("detalPressao").textContent = `${data.main.pressure} hPa`;
 
-
         console.log(getLocalTime(data.timezone, data.dt));
 
     } catch (error) {
-        console.error("Se fodeu:", error);
+
+        console.error("Erro ao buscar clima atual:", error);
+        window.location.href = "error.html";
+
     }
 
     try {
         const response = await fetch(url5dias);
         const data = await response.json();
-
         console.log("5 dias de previsão: ", data);
 
         const previsaoContainer = document.getElementById("previsaoTempo");
@@ -86,6 +91,7 @@ async function getWeatherData(city) {
             const descricao = previsao.weather[0].description;
             const weatherIcon = previsao.weather[0].icon;
             const cardHTML = `
+
                 <div class="card-previsao">
                     <div class="text-center fw-bolder">
                         <span>${diaSemana}</span>
@@ -101,12 +107,16 @@ async function getWeatherData(city) {
                         </span>
                     </div>
                 </div>
+
             `;
             previsaoContainer.innerHTML += cardHTML;
         }
 
     } catch (error) {
+
         console.error("Erro ao obter previsão de 5 dias:", error);
+        window.location.href = "error.html";
+
     }
 }
 
@@ -123,7 +133,7 @@ function getLocalTime(timezoneOffset, dt) {
 
 /*  toast div Whatsapp */
 const botaoWhats = document.getElementById('toastBtnWhatsapp')
-const toastBootstrapWhatsApp = bootstrap.Toast.getOrCreateInstance( document.getElementById('toastWhatsapp'))
+const toastBootstrapWhatsApp = bootstrap.Toast.getOrCreateInstance(document.getElementById('toastWhatsapp'))
 
 botaoWhats.addEventListener('click', () => { // diaparar toast whatsapp
     toastBootstrapWhatsApp.show()
@@ -138,18 +148,14 @@ document.getElementById("toastFormWhatsapp").addEventListener("submit", (e) => {
         // Abre o link do WhatsApp automaticamente
         window.open(link, "_blank");
         // esconder o toast
-        bootstrap.Toast.getOrCreateInstance( document.getElementById('toastWhatsapp')).hide();
+        bootstrap.Toast.getOrCreateInstance(document.getElementById('toastWhatsapp')).hide();
         document.getElementById("toastFormWhatsapp").reset();
     }
 });
 
-
-
 /* toast Alert clima */
 const toastBootstrapAlert = bootstrap.Toast.getOrCreateInstance(document.getElementById('toastAlert'));
 toastBootstrapAlert.show()
-
-
 
 /* abrir mapa */
 document.getElementById("mapIcon").addEventListener("click", () => {

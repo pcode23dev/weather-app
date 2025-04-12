@@ -1,0 +1,40 @@
+<!-- erro.html -->
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="src/assets/css/bootstrap.min.css">
+    <link rel="stylesheet" href="src/assets/css/style.css">
+    <link rel="shortcut icon" href="public/logo.svg" type="image/x-icon">
+    <!-- Icones fontAwesome -->
+    <script src="src/assets/js/all.min.js"></script>
+    <title>Previsão do Tempo</title>
+</head>
+
+<body class="modo-claro" style="height: 85vh; display: flex; justify-content: center; align-items: center;">
+    <div class="card px-4 py-2 bg-dark-ligth">
+        <div id="areaLogo" class="card-header border-0 p-3 d-flex justify-content-start align-items-center">
+            <button type="button" class="bg-transparent border-0">
+                <img src="public/logo.svg" alt="Logo ALPP - WeatherPrevition">
+            </button>
+            <h4 class="text-title">ALPP - WeatherPrevision</h4>
+        </div>
+        <div class="card-body">
+            <h4 class="text-title">😕 Opa! Algo deu errado.</h4>
+            <p class="p-2 text-title">Não conseguimos encontrar a cidade que você procurou ou houve um erro de conexão.
+                <br>👉 <a href="index.html" class="py-3 btn text-primary"> Voltar para a página inicial</a>
+            </p>
+        </div>
+    </div>
+
+    <div id="flutuante" class="position-fixed end-0" style="top: 85%;">
+        <button id="mudarTema" class="btn text-white border-0 p-4" >
+            <i class="fas fa-moon"></i> 
+          </button>
+      </div>
+
+    <script src="src/assets/js/tema.js"></script>
+</body>
+
+</html>
