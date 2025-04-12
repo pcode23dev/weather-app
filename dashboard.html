@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="pt">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <link rel="stylesheet" href="src/assets/css/bootstrap.min.css">
+    <link rel="stylesheet" href="src/assets/css/style.css">
+    <link rel="shortcut icon" href="public/logo.svg" type="image/x-icon">
+    <!-- Icones fontAwesome -->
+    <script src="src/assets/js/all.min.js"></script>
+    <title>Previsão do Tempo</title>
+</head>
+
+<body class="modo-claro">
+    <div class="d-flex flex-column flex-lg-row mx-xl-5 my-xl-4 m-2 gap-4 gap-lg-5 ">
+        <div class="col-lg-6  d-flex">
+            <div class="bg-dark-ligth rounded-4 d-flex flex-column p-lg-4 p-3 gap-3 container">
+                <!-- Area de pesquisa  -->
+                <div class="row" id="bodySection1">
+                    <div class="d-flex align-items-center">
+                        <div class="">
+                            <button class="btn rounded" onclick="location.href = 'index.html'">
+                                <img src="public/logo.svg" alt="Logo ALPP - WeatherPrevition">
+                            </button>
+                        </div>
+                        <form class="d-flex rounded w-100 accordion" id="weatherForm">
+                            <input class="rounded form-control" type="text" id="cityInput" placeholder="Buscar local"
+                                required>
+                            <button type="submit" class="btn">
+                                <i class="fa-solid fa-magnifying-glass fs-5 text-bodyl"></i>
+                            </button>
+                        </form>
+                    </div>
+                </div>
+                <!-- Clima actual  -->
+                <div class="row p-2">
+                    <div id="bgClima" class=" rounded-4 p-4 text-white position-relative">
+                        <div>
+                            <div class="d-flex justify-content-between">
+                                <h2 id="actualNomeCidade" class="fs-4 fw-semibold mb-1">No city</h2>
+                                <div class="">
+                                    <span class="fw-bold" id="actualHoraCidade">N/A </span>
+                                    <img id="imgCountry" src="" alt="imagem pais" class="img-fluid" width="30">
+                                </div>
+                            </div>
+                            <p id="actualDataCidade" class="text-white-50 mb-0">No current date</p>
+                        </div>
+                        <div id="bgClimaDelimitador"></div>
+                        <div class="d-flex">
+                            <div class="col">
+                                <h1 id="actualTemCidade" class="display-1 fw-light mb-2">N/A</h1>
+                                <p class="fs-5 d-block">
+                                    <span id="actualTemIntervaloCidade"> N/A / N/A</span> <br class="d-lg-none">
+                                    <span class="d-none d-lg-inline ">-</span>
+                                    <span id="actualDescricaoCidade"> No description </span>
+                                </p>
+                            </div>
+                            <!-- imagem flutuante -->
+                            <div class="position-absolute bottom-0 end-0">
+                                <div class="text-center">
+                                    <img id="actualIconCidade" class=" img-fluid" width="200"
+                                        src="src/assets/icon/imagens/notfound1.png" alt="Lua com nuvens">
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg d-flex flex-column">
+            <!-- detalhes do tempo -->
+            <div id="detalhesTempo" class="bg-dark-ligth  text-title rounded-4 d-flex flex-column container p-4 ">
+                <div class="p-3 text-bodyl fs-5 d-none d-lg-block">
+                    <span>
+                        Detalhes do clima hoje
+                    </span>
+                </div>
+                <div class="border-botton-c p-3 d-flex justify-content-between align-items-center">
+                    <div class="d-flex align-items-center">
+                        <i class="fas fa-temperature-high text-bodyl me-3 fs-4"></i>
+                        <span>Sensação térmica</span>
+                    </div>
+                    <div id="detalTemperatura" class="text-shape fw-bold fs-5">N/A</div>
+                </div>
+                <div class="border-botton-c p-3 d-flex justify-content-between align-items-center">
+                    <div class="d-flex align-items-center">
+                        <i class="fas fa-cloud-rain   me-3 fs-4 text-bodyl"></i>
+                        <span>Probabilidade de chuva</span>
+                    </div>
+                    <div id="detalProbabilidadeChuva" class="text-shape fw-bold fs-5">N/A</div>
+                </div>
+                <div class="border-botton-c p-3 d-flex justify-content-between align-items-center">
+                    <div class="d-flex align-items-center">
+                        <i class="fas fa-wind   me-3 fs-4 text-bodyl"></i>
+                        <span>Velocidade do vento</span>
+                    </div>
+                    <div id="detalVentoVeloc" class="text-shape fw-bold fs-5">N/A</div>
+                </div>
+                <div class="border-botton-c p-3 d-flex justify-content-between align-items-center">
+                    <div class="d-flex align-items-center">
+                        <i class="fas fa-tint   me-3 fs-4  text-bodyl"></i>
+                        <span>Humidade do ar</span>
+                    </div>
+                    <div id="detalHumidade" class="text-shape fw-bold fs-5">N/A</div>
+                </div>
+                <div class="p-3 d-flex justify-content-between align-items-center">
+                    <div class="d-flex align-items-center">
+                        <i class="fas fa-gauge-high text-bodyl me-3 fs-4"></i>
+                        <span>Pressão do ar</span>
+                    </div>
+                    <div id="detalPressao" class="text-shape fw-bold fs-5">N/A</div>
+                </div>
+            </div>
+
+            <!-- previsão dos 5 dias -->
+            <div class="mt-4 bg-dark-ligth text-title rounded-4 d-flex flex-column container p-4 ">
+                <div class="p-3 mb-3 text-bodyl fs-5 d-none d-lg-block">
+                    <span>
+                        Detalhes do clima hoje
+                    </span>
+                </div>
+                <div id="previsaoTempo" class="d-flex row-cols-3 row-cols-md-4 row-cols-lg-5 overflow-x-auto          ">
+                    <div class="card-previsao">
+                        <div class="text-center fw-bolder">
+                            <span>No day</span>
+                        </div>
+                        <div>
+                            <img src="src/assets/icon/iconsClima/noClima.png" alt="imgaem previsão" class="img-fluid">
+                        </div>
+                        <div class="text-center">
+                            <span class="d-block ">No description</span>
+                            <span>
+                                <span class="fw-bold">
+                                    N/A /
+                                </span>
+                                <span>
+                                    N/A
+                                </span>
+                            </span>
+                        </div>
+                    </div>
+                    <div class="card-previsao">
+                        <div class="text-center fw-bolder">
+                            <span>No day</span>
+                        </div>
+                        <div>
+                            <img src="src/assets/icon/iconsClima/noClima.png" alt="imgaem previsão" class="img-fluid">
+                        </div>
+                        <div class="text-center">
+                            <span class="d-block ">No description</span>
+                            <span>
+                                <span class="fw-bold">
+                                    N/A /
+                                </span>
+                                <span>
+                                    N/A
+                                </span>
+                            </span>
+                        </div>
+                    </div>
+                    <div class="card-previsao">
+                        <div class="text-center fw-bolder">
+                            <span>No day</span>
+                        </div>
+                        <div>
+                            <img src="src/assets/icon/iconsClima/noClima.png" alt="imgaem previsão" class="img-fluid">
+                        </div>
+                        <div class="text-center">
+                            <span class="d-block ">No description</span>
+                            <span>
+                                <span class="fw-bold">
+                                    N/A /
+                                </span>
+                                <span>
+                                    N/A
+                                </span>
+                            </span>
+                        </div>
+                    </div>
+                    <div class="card-previsao">
+                        <div class="text-center fw-bolder">
+                            <span>No day</span>
+                        </div>
+                        <div>
+                            <img src="src/assets/icon/iconsClima/noClima.png" alt="imgaem previsão" class="img-fluid">
+                        </div>
+                        <div class="text-center">
+                            <span class="d-block ">No description</span>
+                            <span>
+                                <span class="fw-bold">
+                                    N/A /
+                                </span>
+                                <span>
+                                    N/A
+                                </span>
+                            </span>
+                        </div>
+                    </div>
+                    <div class="card-previsao">
+                        <div class="text-center fw-bolder">
+                            <span>No day</span>
+                        </div>
+                        <div>
+                            <img src="src/assets/icon/iconsClima/noClima.png" alt="imgaem previsão" class="img-fluid">
+                        </div>
+                        <div class="text-center">
+                            <span class="d-block ">No description</span>
+                            <span>
+                                <span class="fw-bold">
+                                    N/A /
+                                </span>
+                                <span>
+                                    N/A
+                                </span>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <div id="flutuante" class="position-fixed end-0">
+        <div class="d-flex flex-column gap-2">
+            <button id="mudarTema" class="btn text-white border-0" data-bs-toggle="tooltip" data-bs-placement="left"
+                data-bs-title="Modo Escuro / Claro">
+                <i class="fas fa-moon"></i>
+            </button>
+            <button id="mapIcon" onclick="scrollToMap()" class="btn text-white  border-0" data-bs-toggle="tooltip"
+                data-bs-placement="left" data-bs-title="Abrir mapa">
+                <i class="fas fa-map-marked-alt"></i>
+            </button>
+
+            <button class="btn border-0 text-white py-3" id="toastBtnWhatsapp" data-bs-toggle="tooltip"
+                data-bs-placement="left" data-bs-title="Partilhar">
+                <i class="fab fs-5 fa-whatsapp"></i>
+            </button>
+
+        </div>
+    </div>
+
+    <!-- Toast whatsapp -->
+    <div class="toast-container  position-fixed bottom-0 end-0 p-3">
+        <div id="toastWhatsapp" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
+            <div class="toast-header">
+                <strong class="me-auto text-success">Partilhar clima pelo WhatsApp</strong>
+                <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Fechar"></button>
+            </div>
+            <div class="toast-body">
+                <form id="toastFormWhatsapp">
+                    <div class="mb-2">
+                        <label for="whatsappNumber" class="form-label">Número:</label>
+                        <input type="tel" class="form-control" id="whatsappNumber" placeholder="(XXX)XXXXXXXXX"
+                            required>
+                    </div>
+                    <button type="submit" class="btn btn-success btn-sm w-100">Enviar</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- toast alert -->
+    <div class="toast-container position-fixed top-0 end-0 p-3">
+        <div id="toastAlert" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
+            <div class="toast-header">
+                <strong class="me-auto text-warning ">Alerta de Clima</strong>
+                <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Fechar"></button>
+            </div>
+            <div  class="toast-body">
+                <p id="msgAlert" class=""></p>
+            </div>
+        </div>
+    </div>
+
+    <!-- <script src="main.js"></script> -->
+    <script src="src/assets/js/tema.js"></script>
+    <script src="src/assets/js/bootstrap.bundle.min.js"></script>
+    <script src="src/assets/js/script.js"></script>
+    <script>
+        
+
+        const params = new URLSearchParams(window.location.search);
+        const cityUrl = params.get("cidade");
+        console.log("cidade passada: ", cityUrl);
+        carregarDashboard(cityUrl);
+
+        document.getElementById("weatherForm").addEventListener("submit", (event) => {
+            event.preventDefault();
+            getWeatherData("");
+        });
+
+
+    </script>
+
+</body>
+
+</html>

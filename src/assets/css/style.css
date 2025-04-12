@@ -1,0 +1,291 @@
+:root{
+    --background: #13131A;
+    --bg-dark-ligth: #16161F;
+    --blue-baby: #8FB2F5;
+    --text-title: #BFBFD4;
+    --text-body: #7f7f98;
+    --text-body-blur:#484856;
+    --input-bg: #1E1E29;
+    --shape: #ffffff;
+    --border-dark: #484856;
+}
+
+.modo-claro {
+    --background: #ffffff;
+    --bg-dark-ligth: #f8f8f8d8;
+    --blue-baby: #1e5effad;
+    --text-title: #7e7e7e;
+    --text-body: #4c4c4c40;
+    --text-body-blur:#9d9d9db8;  
+    --input-bg: #f4f4f4;
+    --shape: #00000092;
+
+}
+
+.modo-escuro{
+    --background: #13131A;
+    --bg-dark-ligth: #16161f;
+    --blue-baby: #8FB2F5;
+    --text-title: #BFBFD4;
+    --text-body: #7F7F98;
+    --text-body-blur:#484856;
+    --input-bg: #1E1E29;
+    --shape: #ffffff;
+
+}
+
+.bg-blue-baby{
+    background-color: var(--blue-baby);
+}
+.bg-dark-ligth {
+    background: var(--bg-dark-ligth);
+}
+
+.text-title {
+    color: var(--text-title);
+}
+.text-bodyl {
+    color: var(--text-body);
+}
+
+.text-shape {
+    color: var(--shape);
+}
+.background {
+    background-color: var(--background);
+}
+
+.border-botton-c{
+    border-bottom: .1px solid var(--text-body);
+}
+
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: "Nunito Sans", sans-serif;
+    font-optical-sizing: auto;
+    font-style: normal;
+    font-variation-settings:
+        "wdth" 100,
+        "YTLC" 500;
+}
+
+h1,h2,h3,h4,h5,h6, strong {
+    font-weight: 600;
+}
+
+html{
+    
+
+    @media (max-width: 1080px){
+        font-size: 93.75%;
+    }
+
+    @media (max-width: 720px){
+        font-size: 87.5%;
+    }
+
+}
+
+body{
+    background: var(--background);
+    -webkit-font-smoothing: antialiased;
+    position: relative;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+button, i{
+    cursor: pointer;
+    &:hover{
+        transition: .3s;
+        filter: brightness(0.8);
+    }
+    &:focus {
+        outline: none;
+      }
+}
+
+[disable]  {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+#imgFlag{
+    width: 100px;
+    height: 100px;
+}
+
+
+#areaLogo{
+    margin-top: 3rem;
+    h4 {
+        font-size: 1.5rem;
+        padding: .7rem 0 0 .7rem;
+        font-weight: 900;
+        color: var(--text-title);
+       
+        @media (max-width: 767.98px) {
+            font-size: 1.2rem;
+        }
+
+        @media (max-width: 575.98px) {
+            font-size: 1rem;
+        }
+    }
+}
+
+#greetings{
+    padding: 10rem 0 2rem 0;
+
+    h1{
+        color: var(--shape);
+        span {
+            @media (max-width: 575.98px) {
+                &.none {
+                    display: none;
+                }
+                &.white{
+                    color: var(--shape);
+                }
+                font-size: 1.2rem;
+            }
+            &.bluebaby{
+                color: var(--blue-baby);
+            }
+        }
+    }
+
+    h4{
+        font-size: 1.5rem;
+        color: var(--text-title);
+        margin: 1rem; 
+        font-weight: normal;
+
+        @media (max-width: 765.98px) {
+            font-size: 1.2rem;
+        }
+        
+        @media (max-width: 575.98px) {
+            font-size: 1rem;
+        }
+        
+    }
+}
+
+#weatherForm{
+    input {
+
+        background: var(--input-bg);
+        font-size: 1.2rem;
+        padding: 1rem;
+        color: var(--text-body);
+        border: none;
+        outline: none;
+    
+        &:focus {
+            box-shadow: none;
+          background: var(--input-bg);
+          color: var(--shape);
+          outline: none;
+
+        }
+    
+        &::placeholder {
+          color: var(--text-body-blur);
+        }
+    
+        @media (max-width: 767.98px) {
+          font-size: 1.1rem;
+          padding: 1rem;
+        }
+    
+        @media (max-width: 575.98px) {
+          font-size: 1rem;
+          padding: 1remW;
+        }
+      }
+    
+      button {
+        padding: 1.5rem 0 1rem 0;
+        margin-left: -50px;
+        
+        img {
+          width: 20px;
+        }
+    
+    }
+}
+
+
+#bodySection1{
+    div > button{
+        background: var(--input-bg);
+        padding: 1.2rem;
+        margin-right: .5rem;
+    }
+}
+
+#bgClimaDelimitador{
+    height: 50vh;
+
+    @media (max-width: 767.98px) {
+        height: 30vh;
+        
+    }
+  
+    @media (max-width: 575.98px) {
+        height: 20vh;
+    }
+}
+
+#detalhesTempo {
+    div{
+        padding: .3rem 0;
+    }
+}
+
+
+#flutuante{
+    top: 70%;
+    right: 0;
+    z-index: 999;
+
+    button{
+        padding: 1rem;
+        
+    }
+    button{
+        border-radius: 0;
+    }
+
+    #mudarTema{
+        background-color: #8fb3f577;
+        transition: background-color 0.2s, color 0.2s;
+        &:hover{
+            background-color: transparent;
+        }
+    }
+
+    #toastBtnWhatsapp{
+        background-color: #1a9e096b;
+        cursor: pointer;
+        transition: background-color 0.2s, color 0.2s;
+        &:hover{
+            background-color: transparent;
+        }
+
+    }
+
+    #mapIcon{
+        background-color: #fd9f116b;
+        transition: background-color 0.2s, color 0.2s;
+        &:hover{
+            background-color: transparent;
+        }
+
+    }
+
+}
+
+

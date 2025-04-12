@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- CSS do Leaflet -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <!-- JS do Leaflet -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <link rel="stylesheet" href="src/assets/css/bootstrap.min.css">
+    <link rel="stylesheet" href="src/assets/css/style.css">
+    <link rel="shortcut icon" href="public/logo.svg" type="image/x-icon">
+    <!-- Icones fontAwesome -->
+    <script src="src/assets/js/all.min.js"></script>
+    <title>Previsão do Tempo</title>
+</head>
+
+<body class="modo-claro">
+    <div class="container">
+        <div id="map" class="" style="height: 100vh;"></div>
+
+    </div>
+
+
+    <div id="flutuante" class="position-fixed end-0" style="top: 85%;">
+        <button id="mudarTema" class="btn text-white border-0 p-4">
+            <i class="fas fa-moon"></i>
+        </button>
+    </div>
+
+
+
+    <script src="src/assets/js/tema.js"></script>
+    <script src="src/assets/js/script.js"></script>
+
+    <script>
+        const params = new URLSearchParams(window.location.search);
+        const latitude = Number(params.get("lat"));
+        const longitude = Number(params.get("lon"));
+        initMap(latitude,longitude);
+    </script>
+
+</body>
+
+</html>
