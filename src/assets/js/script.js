@@ -24,7 +24,7 @@ function initMap(latitude, longitude) {
 
 /* scripts da dashboard */
 function carregarDashboard(cityUrl, id) {
-    if (id && id.trim() !== "") {
+    if (id && id.trim() != "") {
         getWeatherDataId(id); // Busca o objeto salvo pela API com base no ID
     } else {
         getWeatherData(cityUrl); // Busca direto da OpenWeather se não houver ID
@@ -180,7 +180,7 @@ async function getWeatherData(city) {
 
     } catch (error) {
         console.error("Erro ao buscar clima atual:", error);
-        window.location.href = "error.html";
+       // window.location.href = "error.html";
     }
 
     try {
@@ -236,7 +236,7 @@ async function getWeatherData(city) {
 
     } catch (error) {
         console.error("Erro ao obter previsão de 5 dias:", error);
-        window.location.href = "error.html";
+       // window.location.href = "error.html";
     }
 
 }
@@ -263,33 +263,34 @@ botaoWhats.addEventListener('click', async () => { // diaparar toast whatsapp
     toastBootstrapWhatsApp.show()
 })
 
-document.getElementById("toastFormWhatsapp").addEventListener("submit", async (e) => {
-    e.preventDefault(); 
-    const numero = document.getElementById("whatsappNumber").value.trim();
+    document.getElementById("toastFormWhatsapp").addEventListener("submit", async (e) => {
+        e.preventDefault(); 
+        const numero = document.getElementById("whatsappNumber").value.trim();
 
-    if (numero !== "") {
+        if (numero !== "") {
 
-        // Registra os dados do clima e pega o ID retornado
-        const id = await registarConsumir(objectoTempo);
-        console.log("objecto recuperado: ", id);
+            // Registra os dados do clima e pega o ID retornado
+            const id = await registarConsumir(objectoTempo);
+            console.log("objecto recuperado: ", id);
 
-        if (id) {
-            const mensagem = encodeURIComponent(`*Partilha ALPP - WeatherPrevision*\nAcesse o Link para consultar o tempo, no instante compartilhado:\n${window.location.href}?id=${id}`);
+            if (id) {
+                const baseUrl = `${window.location.origin}/dashboard.html`;
+                const mensagem = encodeURIComponent(`*Partilha ALPP - WeatherPrevision*\nAcesse o Link para consultar o tempo, no instante compartilhado:\n${baseUrl}?id=${id}`);
 
-            const link = `https://wa.me/${numero}?text=${mensagem}`;
+                const link = `https://wa.me/${numero}?text=${mensagem}`;
 
-            window.open(link, "_blank");
+                window.open(link, "_blank");
 
-            const toast = bootstrap.Toast.getOrCreateInstance(document.getElementById('toastWhatsapp'));
-            toast.hide();
-            document.getElementById("toastFormWhatsapp").reset();
+                const toast = bootstrap.Toast.getOrCreateInstance(document.getElementById('toastWhatsapp'));
+                toast.hide();
+                document.getElementById("toastFormWhatsapp").reset();
+            } else {
+                console.error("Erro ao registrar os dados do clima.");
+            }
         } else {
-            console.error("Erro ao registrar os dados do clima.");
+            alert("Por favor, insira um número de telefone do WhatsApp.");
         }
-    } else {
-        alert("Por favor, insira um número de telefone do WhatsApp.");
-    }
-});
+    });
 
 
 /* abrir mapa */
