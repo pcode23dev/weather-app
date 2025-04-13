@@ -4,6 +4,7 @@ const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]
 const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl))
 let objectoTempo = null;
 
+
 /* iniciar o mapa */
 function initMap(latitude, longitude) {
     // Inicializa o mapa
@@ -23,16 +24,78 @@ function initMap(latitude, longitude) {
 
 /* scripts da dashboard */
 function carregarDashboard(cityUrl, id) {
-    if (!id || id.trim()===""){
-        getWeatherData(cityUrl);
+    if (id && id.trim() !== "") {
+        getWeatherDataId(id); // Busca o objeto salvo pela API com base no ID
     } else {
-        console.log("mostrando o id: ",id);
-        //getWeatherDataId(id);
+        getWeatherData(cityUrl); // Busca direto da OpenWeather se não houver ID
     }
 }
 
+
+async function getWeatherDataId(id) {
+    try {
+        const data = await buscarTempoID(id);
+        console.log("Objecto:", data);
+
+        // Atualizando a UI com os dados obtidos
+        mostrarBandeira(data.pais);
+        document.getElementById("actualNomeCidade").innerHTML = data.cidade;
+        document.getElementById("actualHoraCidade").innerHTML = getLocalTime(data.timezone, data.dataHora);
+        document.getElementById("actualDataCidade").innerHTML = new Date().toLocaleDateString("pt-BR", {
+            weekday: "long", day: "numeric", month: "long", year: "numeric"
+        });
+
+        document.getElementById("actualTemCidade").innerHTML = `${Math.round(data.temperatura)}°C`;
+        document.getElementById("actualTemIntervaloCidade").innerHTML = `${Math.round(data.temp_max)}°C / ${Math.round(data.temp_min)}°C`;
+        document.getElementById("actualDescricaoCidade").innerHTML = `${data.descricao}`;
+
+        const weatherIcon = data.iconeClima;
+        document.getElementById("bgClima").style.backgroundImage = `url(src/assets/icon/imagens/${weatherIcon}.png)`;
+        document.getElementById("actualIconCidade").src = `src/assets/icon/iconsClima/${weatherIcon}.svg`;
+
+        // Detalhes do clima
+        document.getElementById("detalTemperatura").textContent = `${Math.round(data.sensacao)}°C`;
+        document.getElementById("detalProbabilidadeChuva").textContent = `${data.nuvens}%`;
+        document.getElementById("detalVentoVeloc").textContent = `${data.vento} km/h`;
+        document.getElementById("detalHumidade").textContent = `${data.humidade}%`;
+        document.getElementById("detalPressao").textContent = `${data.pressao} hPa`;
+
+        // Previsão de 5 dias
+        const previsaoContainer = document.getElementById("previsaoTempo");
+        previsaoContainer.innerHTML = "";
+
+        data.previsoes.forEach(prev => {
+            const card = document.createElement("div");
+            card.classList.add("card-previsao");
+
+            card.innerHTML = `
+                <div class="text-center fw-bolder">
+                    <span>${prev.data}</span>
+                </div>
+                <div>
+                    <img src="src/assets/icon/iconsClima/${prev.iconeclima}.svg" alt="Previsão" class="img-fluid">
+                </div>
+                <div class="text-center">
+                    <span class="d-block">${prev.descricao}</span>
+                    <span>
+                        <span class="fw-bold">${Math.round(prev.temp_min)}° / </span>
+                        <span>${Math.round(prev.temp_max)}°</span>
+                    </span>
+                </div>
+            `;
+
+            previsaoContainer.appendChild(card);
+        });
+
+    } catch (error) {
+        console.error("Erro ao carregar dados por ID:", error);
+    }
+}
+
+
+
 async function getWeatherData(city) {
-    if (!city || city.trim() === "") {
+    if (!cityUrl || cityUrl.trim() === "") {
         city = document.getElementById("cityInput").value;
     }
     const api_key = "7e69a7ca2dab1b9d722bf274d9f0d21c";
@@ -44,7 +107,7 @@ async function getWeatherData(city) {
         cidade: city,
         pais: "",
         iconeClima: "",
-        descricao: "",
+        descricao: "",      
         temperatura: 0,
         temp_max: 0,
         temp_min: 0,
@@ -240,9 +303,6 @@ document.getElementById("mapIcon").addEventListener("click", () => {
     }
 });
 
-
-
-
 // scrip salvar na bd
 async function registarConsumir(objectoTempo) {
     let cabecario = {
@@ -263,13 +323,10 @@ async function registarConsumir(objectoTempo) {
     return null;
 }
 
-
-
 async function buscarTempoID(id) {
     try {
         const resposta = await fetch("https://api-tempo-92mi.onrender.com/buscarID?id=" + id);
         const dados = await resposta.json();
-
         return dados;
     } catch (erro) {
         console.log("Erro: " + erro);

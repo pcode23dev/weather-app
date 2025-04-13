@@ -274,7 +274,9 @@
         const cityUrl = params.get("cidade");
         const id = params.get("id");
 
-        carregarDashboard(cityUrl, id);
+        if(id || id!=""){
+            carregarDashboard(cityUrl, id);
+        }
 
         document.getElementById("weatherForm").addEventListener("submit", (event) => {
             event.preventDefault();
