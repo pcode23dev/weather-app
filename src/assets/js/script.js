@@ -180,7 +180,7 @@ async function getWeatherData(city) {
 
     } catch (error) {
         console.error("Erro ao buscar clima atual:", error);
-       // window.location.href = "error.html";
+        window.location.href = "error.html";
     }
 
     try {
@@ -236,7 +236,7 @@ async function getWeatherData(city) {
 
     } catch (error) {
         console.error("Erro ao obter previsão de 5 dias:", error);
-       // window.location.href = "error.html";
+        window.location.href = "error.html";
     }
 
 }
