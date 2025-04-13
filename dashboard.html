@@ -272,8 +272,9 @@
        
         const params = new URLSearchParams(window.location.search);
         const cityUrl = params.get("cidade");
-        console.log("cidade passada: ", cityUrl);
-        carregarDashboard(cityUrl);
+        const id = params.get("id");
+
+        carregarDashboard(cityUrl, id);
 
         document.getElementById("weatherForm").addEventListener("submit", (event) => {
             event.preventDefault();

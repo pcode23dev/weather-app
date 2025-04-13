@@ -2,6 +2,7 @@
 
 const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]')
 const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl))
+let objectoTempo = null;
 
 /* iniciar o mapa */
 function initMap(latitude, longitude) {
@@ -21,17 +22,43 @@ function initMap(latitude, longitude) {
 }
 
 /* scripts da dashboard */
-function carregarDashboard(cityUrl) {
-    getWeatherData(cityUrl);
+function carregarDashboard(cityUrl, id) {
+    if (!id || id.trim()===""){
+        getWeatherData(cityUrl);
+    } else {
+        console.log("mostrando o id: ",id);
+        //getWeatherDataId(id);
+    }
 }
 
 async function getWeatherData(city) {
     if (!city || city.trim() === "") {
-        city = document.getElementById("cityInput").value
+        city = document.getElementById("cityInput").value;
     }
     const api_key = "7e69a7ca2dab1b9d722bf274d9f0d21c";
     const url = `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${api_key}&lang=pt_br&units=metric`;
     const url5dias = `https://api.openweathermap.org/data/2.5/forecast?q=${city}&appid=${api_key}&lang=pt_br&units=metric`;
+
+    // Inicializando a variável objectoTempo
+    objectoTempo = {
+        cidade: city,
+        pais: "",
+        iconeClima: "",
+        descricao: "",
+        temperatura: 0,
+        temp_max: 0,
+        temp_min: 0,
+        sensacao: 0,
+        humidade: 0,
+        pressao: 0,
+        vento: 0,
+        nuvens: 0,
+        timezone: 0,
+        dataHora: Date.now(),
+        longitude: 0,
+        latitude: 0,
+        previsoes: []
+    };
 
     try {
         const response = await fetch(url);
@@ -42,33 +69,41 @@ async function getWeatherData(city) {
             throw new Error("Cidade inválida ou não encontrada");
         }
 
-        lon = data.coord.lon;
-        lat = data.coord.lat;
+        // Preenchendo a variável objectoTempo com os dados do clima atual
+        objectoTempo.cidade = data.name;
+        objectoTempo.pais = data.sys.country;
+        objectoTempo.iconeClima = data.weather[0].icon;
+        objectoTempo.descricao = data.weather[0].description;
+        objectoTempo.temperatura = data.main.temp;
+        objectoTempo.temp_max = data.main.temp_max;
+        objectoTempo.temp_min = data.main.temp_min;
+        objectoTempo.sensacao = data.main.feels_like;
+        objectoTempo.humidade = data.main.humidity;
+        objectoTempo.pressao = data.main.pressure;
+        objectoTempo.vento = data.wind.speed;
+        objectoTempo.nuvens = data.clouds.all;
+        objectoTempo.timezone = data.timezone;
+        objectoTempo.longitude = data.coord.lon;
+        objectoTempo.latitude = data.coord.lat;
 
-        console.log("lon= ", lon, " lat= ", lat);
-        console.log("Dados retornadods: ", data);
+        // Atualizando a UI com os dados obtidos
         mostrarBandeira(data.sys.country);
-
         document.getElementById("actualNomeCidade").innerHTML = data.name;
         document.getElementById("actualHoraCidade").innerHTML = getLocalTime(data.timezone, data.dt);
         document.getElementById("actualDataCidade").innerHTML = new Date().toLocaleDateString("pt-BR", { weekday: "long", day: "numeric", month: "long", year: "numeric" });
         document.getElementById("actualTemCidade").innerHTML = `${data.main.temp}°C`;
-        document.getElementById("actualTemIntervaloCidade").innerHTML = `${data.main.temp_max}°C / ${data.main.temp_min}°C`
+        document.getElementById("actualTemIntervaloCidade").innerHTML = `${data.main.temp_max}°C / ${data.main.temp_min}°C`;
         document.getElementById("actualDescricaoCidade").innerHTML = `${data.weather[0].description}`;
         const weatherIcon = data.weather[0].icon;
-
         document.getElementById("bgClima").style.backgroundImage = `url(src/assets/icon/imagens/${weatherIcon}.png)`;
         document.getElementById("actualIconCidade").src = `src/assets/icon/iconsClima/${weatherIcon}.svg`;
-
         document.getElementById("detalTemperatura").textContent = `${data.main.feels_like}°c`;
         document.getElementById("detalProbabilidadeChuva").textContent = `${data.clouds.all}%`;
         document.getElementById("detalVentoVeloc").textContent = `${data.wind.speed} km/h`;
         document.getElementById("detalHumidade").textContent = `${data.main.humidity}%`;
         document.getElementById("detalPressao").textContent = `${data.main.pressure} hPa`;
 
-        console.log(getLocalTime(data.timezone, data.dt));
-
-        // Notificação
+        // Notificação 
         if ("Notification" in window) {
             Notification.requestPermission().then(permission => {
                 if (permission === "granted") {
@@ -83,29 +118,42 @@ async function getWeatherData(city) {
         }
 
     } catch (error) {
-
         console.error("Erro ao buscar clima atual:", error);
         window.location.href = "error.html";
-
     }
 
     try {
         const response = await fetch(url5dias);
-        const data = await response.json();
-        console.log("5 dias de previsão: ", data);
+        const data5dias = await response.json();
+        console.log("5 dias de previsão: ", data5dias);
+        console.log("bojectoTempo", objectoTempo);
+
 
         const previsaoContainer = document.getElementById("previsaoTempo");
         previsaoContainer.innerHTML = "";
 
-        for (let i = 0; i < data.list.length; i += 8) { // Pegando previsões a cada 24h
-            const previsao = data.list[i];
+        // Preenchendo as previsões de 5 dias
+        for (let i = 0; i < data5dias.list.length; i += 8) { // Pegando previsões a cada 24h
+            const previsao = data5dias.list[i];
             const diaSemana = new Date((previsao.dt + 86400) * 1000).toLocaleDateString("pt-BR", { weekday: "short" });
             const tempMin = previsao.main.temp_min;
             const tempMax = previsao.main.temp_max;
             const descricao = previsao.weather[0].description;
             const weatherIcon = previsao.weather[0].icon;
-            const cardHTML = `
 
+            // Adicionando a previsão no array do objectoTempo
+            objectoTempo.previsoes.push({
+                data: diaSemana,
+                temp_min: tempMin,
+                temp_max: tempMax,
+                descricao: descricao,
+                iconeclima: weatherIcon
+            });
+
+            console.log("bojectoTempo", objectoTempo);
+
+
+            const cardHTML = `
                 <div class="card-previsao">
                     <div class="text-center fw-bolder">
                         <span>${diaSemana}</span>
@@ -121,17 +169,15 @@ async function getWeatherData(city) {
                         </span>
                     </div>
                 </div>
-
             `;
             previsaoContainer.innerHTML += cardHTML;
         }
 
     } catch (error) {
-
         console.error("Erro ao obter previsão de 5 dias:", error);
         window.location.href = "error.html";
-
     }
+
 }
 
 function mostrarBandeira(country) {
@@ -149,23 +195,39 @@ function getLocalTime(timezoneOffset, dt) {
 const botaoWhats = document.getElementById('toastBtnWhatsapp')
 const toastBootstrapWhatsApp = bootstrap.Toast.getOrCreateInstance(document.getElementById('toastWhatsapp'))
 
-botaoWhats.addEventListener('click', () => { // diaparar toast whatsapp
+botaoWhats.addEventListener('click', async () => { // diaparar toast whatsapp
+    // console.log("clicou no botao whatsapp ", await registarConsumir(objectoTempo));
     toastBootstrapWhatsApp.show()
 })
 
-document.getElementById("toastFormWhatsapp").addEventListener("submit", (e) => { // partilhar link whatsapp
-    e.preventDefault();
+document.getElementById("toastFormWhatsapp").addEventListener("submit", async (e) => {
+    e.preventDefault(); 
     const numero = document.getElementById("whatsappNumber").value.trim();
+
     if (numero !== "") {
-        const mensagem = encodeURIComponent(`*Partilha ALPP - WeatherPrevision*\nAcesse o Link para consultar o tempo, no instante compartilhado:\n${window.location.href}`);
-        const link = `https://wa.me/${numero}?text=${mensagem}`;
-        // Abre o link do WhatsApp automaticamente
-        window.open(link, "_blank");
-        // esconder o toast
-        bootstrap.Toast.getOrCreateInstance(document.getElementById('toastWhatsapp')).hide();
-        document.getElementById("toastFormWhatsapp").reset();
+
+        // Registra os dados do clima e pega o ID retornado
+        const id = await registarConsumir(objectoTempo);
+        console.log("objecto recuperado: ", id);
+
+        if (id) {
+            const mensagem = encodeURIComponent(`*Partilha ALPP - WeatherPrevision*\nAcesse o Link para consultar o tempo, no instante compartilhado:\n${window.location.href}?id=${id}`);
+
+            const link = `https://wa.me/${numero}?text=${mensagem}`;
+
+            window.open(link, "_blank");
+
+            const toast = bootstrap.Toast.getOrCreateInstance(document.getElementById('toastWhatsapp'));
+            toast.hide();
+            document.getElementById("toastFormWhatsapp").reset();
+        } else {
+            console.error("Erro ao registrar os dados do clima.");
+        }
+    } else {
+        alert("Por favor, insira um número de telefone do WhatsApp.");
     }
 });
+
 
 /* abrir mapa */
 document.getElementById("mapIcon").addEventListener("click", () => {
@@ -177,3 +239,40 @@ document.getElementById("mapIcon").addEventListener("click", () => {
         toastBootstrapAlert.show()
     }
 });
+
+
+
+
+// scrip salvar na bd
+async function registarConsumir(objectoTempo) {
+    let cabecario = {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify(objectoTempo)
+    };
+
+    try {
+        const resposta = await fetch("https://api-tempo-92mi.onrender.com/store", cabecario);
+        const dados = await resposta.json();
+        return dados._id;
+    } catch (erro) {
+        console.log("Erro: " + erro);
+    }
+    return null;
+}
+
+
+
+async function buscarTempoID(id) {
+    try {
+        const resposta = await fetch("https://api-tempo-92mi.onrender.com/buscarID?id=" + id);
+        const dados = await resposta.json();
+
+        return dados;
+    } catch (erro) {
+        console.log("Erro: " + erro);
+    }
+    return null;
+}
