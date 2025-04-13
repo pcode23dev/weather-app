@@ -76,14 +76,10 @@ async function getWeatherData(city) {
                         body: `Agora em ${data.name}: ${data.main.temp}°C, ${data.weather[0].description}`,
                         icon: `src/assets/icon/iconsClima/${data.weather[0].icon}.svg`
                     });
-                }else {
-                    Notification.requestPermission()
-                    new Notification("WeatherPrevision - Alerta de Clima!", {
-                        body: `Agora em ${data.name}: ${data.main.temp}°C, ${data.weather[0].description}`,
-                        icon: `src/assets/icon/iconsClima/${data.weather[0].icon}.svg`
-                    });
                 }
             });
+        } else {
+            alert("Este navegador não suporta notificações.");
         }
 
     } catch (error) {
