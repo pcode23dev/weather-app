@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="pt">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -13,7 +14,8 @@
 
     <title>Previsão do Tempo</title>
 </head>
-<body class="modo-claro">    
+
+<body class="modo-claro">
     <div class="container">
         <div class="row">
             <div class="col-12">
@@ -24,12 +26,13 @@
                     <h4>ALPP - WeatherPrevision</h4>
                 </div>
             </div>
-               <div class="col-12">
+            <div class="col-12">
                 <div id="greetings" class="text-center">
                     <h1>
-                        <span class="d-none d-md-inline">Boas vindas ao</span> 
+                        <span class="d-none d-md-inline">Boas vindas ao</span>
                         <span>ALPP</span>
-                        <span class="bluebaby"> - WeatherPrevision </span> </h1>
+                        <span class="bluebaby"> - WeatherPrevision </span>
+                    </h1>
                     <h4>Escolha um local para ver a previsão do tempo</h4>
                 </div>
             </div>
@@ -37,7 +40,7 @@
         <div class="row justify-content-center">
             <form class="col-12 col-sm-9 col-md-8 col-lg-6 d-flex" id="weatherForm">
                 <input class="p-4 form-control" type="text" id="cityInput" placeholder="Buscar local" required>
-                <button   type="submit" class="btn">
+                <button type="submit" class="btn">
                     <i class="fa-solid fa-magnifying-glass fs-5 text-bodyl"></i>
                 </button>
             </form>
@@ -45,15 +48,17 @@
     </div>
 
     <div id="flutuante" class="position-fixed end-0" style="top: 85%;">
-        <button id="mudarTema" class="btn text-white border-0 p-4" >
-            <i class="fas fa-moon"></i> 
-          </button>
-      </div>
+        <button id="mudarTema" class="btn text-white border-0 p-4">
+            <i class="fas fa-moon"></i>
+        </button>
+    </div>
 
     <script>
-
-        Notification.requestPermission();
-
+        if ("Notification" in window) {
+            Notification.requestPermission();
+        }else {
+            console.log("Navegador sem suporte a notificação!");
+        }
         document.getElementById("weatherForm").addEventListener("submit", (event) => {
             event.preventDefault();
             const inputValue = document.getElementById("cityInput").value;
@@ -66,4 +71,5 @@
     <script src="src/assets/js/bootstrap.bundle.min.js"></script>
     <script src="src/assets/js/script.js"></script>
 </body>
+
 </html>
