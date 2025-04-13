@@ -51,12 +51,11 @@
       </div>
 
     <script>
-        // Notification.requestPermission() // habilitar notificações
+        Notification.requestPermission() // habilitar notificações
 
 
         document.getElementById("weatherForm").addEventListener("submit", (event) => {
             event.preventDefault();
-            alert("trytuyiuoipo+")
             const inputValue = document.getElementById("cityInput").value;
             window.location.href = `dashboard.html?cidade=${encodeURIComponent(inputValue)}`;
         });
