@@ -269,13 +269,7 @@
     <script src="src/assets/js/bootstrap.bundle.min.js"></script>
     <script src="src/assets/js/script.js"></script>
     <script>
-        if ("Notification" in window) {
-            if (Notification.permission != "granted") {
-                Notification.requestPermission()
-            };
-        }else {
-            console.log("Navegador sem suporte a notificação!");
-        }
+       
         const params = new URLSearchParams(window.location.search);
         const cityUrl = params.get("cidade");
         console.log("cidade passada: ", cityUrl);

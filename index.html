@@ -54,11 +54,6 @@
     </div>
 
     <script>
-        if ("Notification" in window) {
-            Notification.requestPermission();
-        }else {
-            console.log("Navegador sem suporte a notificação!");
-        }
         document.getElementById("weatherForm").addEventListener("submit", (event) => {
             event.preventDefault();
             const inputValue = document.getElementById("cityInput").value;
