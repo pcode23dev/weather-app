@@ -67,6 +67,14 @@ async function getWeatherData(city) {
         document.getElementById("detalPressao").textContent = `${data.main.pressure} hPa`;
 
         console.log(getLocalTime(data.timezone, data.dt));
+        // Notificação
+        if ("Notification" in window && Notification.permission === "granted") {
+            new Notification("WeatherPrevision - Alerta de Clima!", {
+                body: `Agora em ${data.name}: ${data.main.temp}°C, ${data.weather[0].description}`,
+                icon: `src/assets/icon/iconsClima/${data.weather[0].icon}.svg`
+            });
+        }
+
 
     } catch (error) {
 
@@ -152,10 +160,6 @@ document.getElementById("toastFormWhatsapp").addEventListener("submit", (e) => {
         document.getElementById("toastFormWhatsapp").reset();
     }
 });
-
-/* toast Alert clima */
-const toastBootstrapAlert = bootstrap.Toast.getOrCreateInstance(document.getElementById('toastAlert'));
-toastBootstrapAlert.show()
 
 /* abrir mapa */
 document.getElementById("mapIcon").addEventListener("click", () => {
