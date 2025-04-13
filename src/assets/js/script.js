@@ -92,10 +92,8 @@ async function getWeatherDataId(id) {
     }
 }
 
-
-
 async function getWeatherData(city) {
-    if (!cityUrl || cityUrl.trim() === "") {
+    if (!city || city   .trim() === "") {
         city = document.getElementById("cityInput").value;
     }
     const api_key = "7e69a7ca2dab1b9d722bf274d9f0d21c";
@@ -316,6 +314,7 @@ async function registarConsumir(objectoTempo) {
     try {
         const resposta = await fetch("https://api-tempo-92mi.onrender.com/store", cabecario);
         const dados = await resposta.json();
+        console.log("Salvo no banco! ", dados);
         return dados._id;
     } catch (erro) {
         console.log("Erro: " + erro);

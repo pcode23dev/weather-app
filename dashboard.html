@@ -275,11 +275,13 @@
         const id = params.get("id");
 
         if(id || id!=""){
+            console.log("entrei em verificçõ do id")
             carregarDashboard(cityUrl, id);
         }
 
         document.getElementById("weatherForm").addEventListener("submit", (event) => {
             event.preventDefault();
+            console.log("entrei em verificçõ no input")
             getWeatherData("");
         });
 
