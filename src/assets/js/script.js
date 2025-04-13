@@ -241,6 +241,8 @@ async function getWeatherData(city) {
 
 }
 
+
+
 function mostrarBandeira(country) {
     const flagUrl = `https://flagsapi.com/${country}/flat/64.png`;
     document.getElementById("imgCountry").src = flagUrl;
