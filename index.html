@@ -55,15 +55,14 @@
 
         document.getElementById("weatherForm").addEventListener("submit", (event) => {
             event.preventDefault();
-            alert("rerer")
             const inputValue = document.getElementById("cityInput").value;
             window.location.href = `dashboard.html?cidade=${encodeURIComponent(inputValue)}`;
         });
 
-        Notification.requestPermission() // habilitar notificações
+        Notification.requestPermission();
 
     </script>
-    <!-- <script src="main.js"></script> -->
+
     <script src="src/assets/js/tema.js"></script>
     <script src="src/assets/js/bootstrap.bundle.min.js"></script>
     <script src="src/assets/js/script.js"></script>
