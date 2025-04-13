@@ -52,14 +52,13 @@
 
     <script>
 
+        Notification.requestPermission();
 
         document.getElementById("weatherForm").addEventListener("submit", (event) => {
             event.preventDefault();
             const inputValue = document.getElementById("cityInput").value;
             window.location.href = `dashboard.html?cidade=${encodeURIComponent(inputValue)}`;
         });
-
-        Notification.requestPermission(); // não vai funcionar para ios prof
 
     </script>
 

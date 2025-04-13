@@ -269,8 +269,9 @@
     <script src="src/assets/js/bootstrap.bundle.min.js"></script>
     <script src="src/assets/js/script.js"></script>
     <script>
-        
-
+        if (Notification.permission != "granted") {
+            Notification.requestPermission(); 
+        }
         const params = new URLSearchParams(window.location.search);
         const cityUrl = params.get("cidade");
         console.log("cidade passada: ", cityUrl);
