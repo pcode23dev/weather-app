@@ -232,8 +232,8 @@
                 data-bs-title="Modo Escuro / Claro">
                 <i class="fas fa-moon"></i>
             </button>
-            <button id="mapIcon" onclick="scrollToMap()" class="btn text-white  border-0" data-bs-toggle="tooltip"
-                data-bs-placement="left" data-bs-title="Abrir mapa">
+            <button id="mapIcon" class="btn text-white  border-0" data-bs-toggle="tooltip" data-bs-placement="left"
+                data-bs-title="Abrir mapa">
                 <i class="fas fa-map-marked-alt"></i>
             </button>
 
@@ -269,12 +269,12 @@
     <script src="src/assets/js/bootstrap.bundle.min.js"></script>
     <script src="src/assets/js/script.js"></script>
     <script>
-       
+
         const params = new URLSearchParams(window.location.search);
         const cityUrl = params.get("cidade");
         const id = params.get("id");
 
-        if(id || id!=""){
+        if (id || id != "") {
             console.log("entrei em verificçõ do id")
             carregarDashboard(cityUrl, id);
         }

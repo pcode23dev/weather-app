@@ -3,6 +3,8 @@
 const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]')
 const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl))
 let objectoTempo = null;
+let lat = null;
+let lon = null;
 
 
 /* iniciar o mapa */
@@ -93,7 +95,7 @@ async function getWeatherDataId(id) {
 }
 
 async function getWeatherData(city) {
-    if (!city || city   .trim() === "") {
+    if (!city || city.trim() === "") {
         city = document.getElementById("cityInput").value;
     }
     const api_key = "7e69a7ca2dab1b9d722bf274d9f0d21c";
@@ -105,7 +107,8 @@ async function getWeatherData(city) {
         cidade: city,
         pais: "",
         iconeClima: "",
-        descricao: "",      
+        descricao: "",
+        dt: 0,
         temperatura: 0,
         temp_max: 0,
         temp_min: 0,
@@ -115,7 +118,7 @@ async function getWeatherData(city) {
         vento: 0,
         nuvens: 0,
         timezone: 0,
-        dataHora: Date.now(),
+        dataHora: 0,
         longitude: 0,
         latitude: 0,
         previsoes: []
@@ -146,7 +149,9 @@ async function getWeatherData(city) {
         objectoTempo.timezone = data.timezone;
         objectoTempo.longitude = data.coord.lon;
         objectoTempo.latitude = data.coord.lat;
-
+        objectoTempo.dataHora = data.dt;
+        lat = data.coord.lat;
+        lon = data.coord.lon;
         // Atualizando a UI com os dados obtidos
         mostrarBandeira(data.sys.country);
         document.getElementById("actualNomeCidade").innerHTML = data.name;
@@ -251,7 +256,9 @@ function mostrarBandeira(country) {
 
 function getLocalTime(timezoneOffset, dt) {
     const localTime = new Date((dt + timezoneOffset) * 1000);
-    return localTime.toLocaleTimeString("pt-BR", { hour: "2-digit", minute: "2-digit" });
+    const hora = localTime.toLocaleTimeString("pt-BR", { hour: "2-digit", minute: "2-digit" }).split(':');
+    hora[0]--;
+    return `${hora[0]}:${hora[1]}`;
 }
 
 /*  toast div Whatsapp */
@@ -263,34 +270,34 @@ botaoWhats.addEventListener('click', async () => { // diaparar toast whatsapp
     toastBootstrapWhatsApp.show()
 })
 
-    document.getElementById("toastFormWhatsapp").addEventListener("submit", async (e) => {
-        e.preventDefault(); 
-        const numero = document.getElementById("whatsappNumber").value.trim();
+document.getElementById("toastFormWhatsapp").addEventListener("submit", async (e) => {
+    e.preventDefault();
+    const numero = document.getElementById("whatsappNumber").value.trim();
 
-        if (numero !== "") {
+    if (numero !== "") {
 
-            // Registra os dados do clima e pega o ID retornado
-            const id = await registarConsumir(objectoTempo);
-            console.log("objecto recuperado: ", id);
+        // Registra os dados do clima e pega o ID retornado
+        const id = await registarConsumir(objectoTempo);
+        console.log("objecto recuperado: ", id);
 
-            if (id) {
-                const baseUrl = `${window.location.origin}/dashboard.html`;
-                const mensagem = encodeURIComponent(`*Partilha ALPP - WeatherPrevision*\nAcesse o Link para consultar o tempo, no instante compartilhado:\n${baseUrl}?id=${id}`);
+        if (id) {
+            const baseUrl = `${window.location.origin}/dashboard.html`;
+            const mensagem = encodeURIComponent(`*Partilha ALPP - WeatherPrevision*\nAcesse o Link para consultar o tempo, no instante compartilhado:\n${baseUrl}?id=${id}`);
 
-                const link = `https://wa.me/${numero}?text=${mensagem}`;
+            const link = `https://wa.me/${numero}?text=${mensagem}`;
 
-                window.open(link, "_blank");
+            window.open(link, "_blank");
 
-                const toast = bootstrap.Toast.getOrCreateInstance(document.getElementById('toastWhatsapp'));
-                toast.hide();
-                document.getElementById("toastFormWhatsapp").reset();
-            } else {
-                console.error("Erro ao registrar os dados do clima.");
-            }
+            const toast = bootstrap.Toast.getOrCreateInstance(document.getElementById('toastWhatsapp'));
+            toast.hide();
+            document.getElementById("toastFormWhatsapp").reset();
         } else {
-            alert("Por favor, insira um número de telefone do WhatsApp.");
+            console.error("Erro ao registrar os dados do clima.");
         }
-    });
+    } else {
+        alert("Por favor, insira um número de telefone do WhatsApp.");
+    }
+});
 
 
 /* abrir mapa */
